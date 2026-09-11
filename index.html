@@ -40,6 +40,29 @@
   .tabbtn .flag{ font-family:var(--mono); font-size:10.5px; color:var(--ink-soft); margin-left:6px; }
   [data-panel][hidden]{ display:none !important; }
 
+  .kr-shelf{ display:flex; align-items:stretch; gap:0; }
+  .shelf-spine{ display:flex; flex-direction:column; gap:10px; flex:0 0 auto; padding-top:4px; }
+  .spine-btn{
+    writing-mode:vertical-rl; text-orientation:mixed;
+    font-family:var(--disp); font-weight:700; font-size:14px; letter-spacing:.06em;
+    background:var(--accent-soft); color:var(--ink-soft); cursor:pointer;
+    border:1px solid var(--line); border-right:none; border-radius:8px 0 0 8px;
+    padding:20px 9px; min-height:150px; transition:background .15s ease, color .15s ease;
+  }
+  .spine-btn:hover{ color:var(--ink); }
+  .spine-btn.active{ background:var(--accent); color:#fff; border-color:var(--accent); }
+  .shelf-content{ flex:1; min-width:0; }
+  [data-krsub-panel][hidden]{ display:none !important; }
+  @media (max-width:640px){
+    .kr-shelf{ flex-direction:column; }
+    .shelf-spine{ flex-direction:row; padding-top:0; }
+    .spine-btn{
+      writing-mode:horizontal-tb; min-height:auto; flex:1;
+      border:1px solid var(--line); border-bottom:none; border-radius:8px 8px 0 0;
+      padding:10px 8px; text-align:center;
+    }
+  }
+
   .panel{ background:var(--paper-raised); border:1px solid var(--line); border-radius:10px; padding:20px 22px; margin-bottom:20px; }
 
   /* de-emphasized, compact read-only mirror of 새 요청 제출 / 요청 현황 */
@@ -126,7 +149,7 @@
 <p class="eyebrow">읽기 전용 스냅샷</p>
 <h1>OEM 소싱 리포트</h1>
 <p class="lede">세탁세제 OEM 제조사 조사 결과입니다 (국내 + 1688/중국). 이 페이지는 특정 시점의 스냅샷이며 실시간으로 갱신되지 않습니다.</p>
-<p class="snapshot-note">생성 시각: 2026-09-11 15:23 · 국내 47곳 · 1688 20곳</p>
+<p class="snapshot-note">생성 시각: 2026-09-11 17:49 · 국내 47곳 · 1688 20곳</p>
 
 <div class="tabbar">
   <button class="tabbtn active" data-tab="kr">국내 제조사</button>
@@ -134,36 +157,78 @@
 </div>
 
 <div data-panel="kr">
-  <button type="button" class="accordion-bar" data-collapse="kr-intake-body" aria-expanded="false">
-    <span class="chev">▸</span> 새 요청 제출
-  </button>
-  <div id="kr-intake-body" class="accordion-body" hidden>
-    <textarea class="mini-textarea" disabled placeholder="이 링크는 읽기 전용이라 제출할 수 없습니다"></textarea>
-    <div class="mini-row">
-      <span class="mini-hint">새 요청은 원본 앱(작성자)에서만 제출할 수 있어요.</span>
-      <button class="mini-btn" disabled>요청 제출</button>
+  <div class="kr-shelf">
+    <div class="shelf-spine">
+      <button type="button" class="spine-btn active" data-krsub="det">세탁세제</button>
+      <button type="button" class="spine-btn" data-krsub="dry">건조기시트</button>
     </div>
-  </div>
 
-  <button type="button" class="accordion-bar" data-collapse="kr-queue-body" aria-expanded="false">
-    <span class="chev">▸</span> 요청 현황 <span class="acc-count">(2)</span>
-  </button>
-  <div id="kr-queue-body" class="accordion-body" hidden>
-    <div class="mini-ticket"><span class="tt">세탁세제 OEM 제조사 47곳 (30 + 15 + 2, 블루워시·선진바이오 추가)</span><span class="mini-chip">완료</span><span class="mini-time">09.11 오전 11:00</span></div>
-    <div class="mini-ticket"><span class="tt">세탁세제 OEM 제조사 30곳 (대기업부터 영세까지, 연락처·브랜드 포함)</span><span class="mini-chip">완료</span><span class="mini-time">09.10 오후 06:00</span></div>
-  </div>
+    <div class="shelf-content">
+      <div data-krsub-panel="det">
+        <button type="button" class="accordion-bar" data-collapse="kr-intake-body" aria-expanded="false">
+          <span class="chev">▸</span> 새 요청 제출
+        </button>
+        <div id="kr-intake-body" class="accordion-body" hidden>
+          <textarea class="mini-textarea" disabled placeholder="이 링크는 읽기 전용이라 제출할 수 없습니다"></textarea>
+          <div class="mini-row">
+            <span class="mini-hint">새 요청은 원본 앱(작성자)에서만 제출할 수 있어요.</span>
+            <button class="mini-btn" disabled>요청 제출</button>
+          </div>
+        </div>
 
-  <div class="panel">
-    <div class="contacted-block top">
-      <h3>컨택 완료 업체 <span class="count" id="kr-contactedCount"></span></h3>
-      <div id="kr-contactedList"><div class="queue-empty">아직 컨택 완료로 표시된 업체가 없습니다.</div></div>
+        <button type="button" class="accordion-bar" data-collapse="kr-queue-body" aria-expanded="false">
+          <span class="chev">▸</span> 요청 현황 <span class="acc-count">(2)</span>
+        </button>
+        <div id="kr-queue-body" class="accordion-body" hidden>
+          <div class="mini-ticket"><span class="tt">세탁세제 OEM 제조사 47곳 (30 + 15 + 2, 블루워시·선진바이오 추가)</span><span class="mini-chip">완료</span><span class="mini-time">09.11 오전 11:00</span></div>
+          <div class="mini-ticket"><span class="tt">세탁세제 OEM 제조사 30곳 (대기업부터 영세까지, 연락처·브랜드 포함)</span><span class="mini-chip">완료</span><span class="mini-time">09.10 오후 06:00</span></div>
+        </div>
+
+        <div class="panel">
+          <div class="contacted-block top">
+            <h3>컨택 완료 업체 <span class="count" id="kr-contactedCount"></span></h3>
+            <div id="kr-contactedList"><div class="queue-empty">아직 컨택 완료로 표시된 업체가 없습니다.</div></div>
+          </div>
+          <div class="stats" id="kr-stats"></div>
+          <div class="filters">
+            <input type="search" id="kr-search" placeholder="회사명·지역·브랜드 검색">
+            <div id="kr-chips" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+          </div>
+          <div class="grid" id="kr-grid"></div>
+        </div>
+      </div>
+
+      <div data-krsub-panel="dry" hidden>
+        <button type="button" class="accordion-bar" data-collapse="dry-intake-body" aria-expanded="false">
+          <span class="chev">▸</span> 새 요청 제출
+        </button>
+        <div id="dry-intake-body" class="accordion-body" hidden>
+          <textarea class="mini-textarea" disabled placeholder="이 링크는 읽기 전용이라 제출할 수 없습니다"></textarea>
+          <div class="mini-row">
+            <span class="mini-hint">새 요청은 원본 앱(작성자)에서만 제출할 수 있어요.</span>
+            <button class="mini-btn" disabled>요청 제출</button>
+          </div>
+        </div>
+
+        <button type="button" class="accordion-bar" data-collapse="dry-queue-body" aria-expanded="false">
+          <span class="chev">▸</span> 요청 현황 <span class="acc-count">(0)</span>
+        </button>
+        <div id="dry-queue-body" class="accordion-body" hidden><div class="queue-empty">아직 제출된 요청이 없습니다.</div></div>
+
+        <div class="panel">
+          <div class="contacted-block top">
+            <h3>컨택 완료 업체 <span class="count" id="dry-contactedCount"></span></h3>
+            <div id="dry-contactedList"><div class="queue-empty">아직 컨택 완료로 표시된 업체가 없습니다.</div></div>
+          </div>
+          <div class="stats" id="dry-stats"></div>
+          <div class="filters">
+            <input type="search" id="dry-search" placeholder="회사명·지역·브랜드 검색">
+            <div id="dry-chips" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+          </div>
+          <div class="grid" id="dry-grid"></div>
+        </div>
+      </div>
     </div>
-    <div class="stats" id="kr-stats"></div>
-    <div class="filters">
-      <input type="search" id="kr-search" placeholder="회사명·지역·브랜드 검색">
-      <div id="kr-chips" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
-    </div>
-    <div class="grid" id="kr-grid"></div>
   </div>
 </div>
 
@@ -208,6 +273,7 @@
 (function(){
   const KR = [{"brand": "리큐, 제트, 스파크, 허브마리1848, 순샘 등", "caveat": null, "contact": "고객만족팀 080-024-1357", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "공장등록 데이터: 업종 \"치약, 비누 및 기타 세제 제조업 외 1종\", 생산품 \"세제, 비누, 치약 등, 화장품 등\"", "homepage": "www.aekyung.co.kr", "name": "애경산업(주) 청양공장", "products": "세탁세제(리큐·제트·스파크), 섬유유연제(허브마리1848), 주방세제(순샘) 등", "region": "충남 청양군 정산면", "scale": "대기업", "source": "ifactoryhub.com 전국 세제공장 리스트", "tier": 2}, {"brand": "피죤", "caveat": "공식 홈페이지가 SSL 인증서 오류로 직접 열람되지 않아 연락처는 검색엔진 색인 정보 기준", "contact": "1588-9350 (검색결과 기준, 공식 접속 미확인)", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "공장등록 데이터: 업종 \"계면활성제 제조업 외 5종\", 생산품 \"섬유 유연제, 세탁세제\"", "homepage": "pigeon.co.kr(직접 접속 불가)", "name": "(주)피죤", "products": "섬유유연제 프리미엄/리치퍼퓸/시그니처/보타닉, 섬유탈취제 등", "region": "충북 진천군 초평면", "scale": "대기업/중견", "source": "ifactoryhub.com 전국 세제공장 리스트", "tier": 2}, {"brand": "OEM/ODM 전문 (자체 소비자 브랜드 없음)", "caveat": "공식 홈페이지 인증서 만료로 직접 열람 불가, 검색엔진 색인 정보로 보완", "contact": "본사 043-219-3600 / 고객센터 02-338-8470 (검색결과 기준)", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"30여년 동안 OEM/ODM 방식으로... 스킨케어부터 클렌징, 마스크팩, 세탁세제, 손소독제까지\" (직원 약240명, 연매출 800~900억원)", "homepage": "evercos.com(직접 접속 불가)", "name": "(주)에버코스", "products": "세제, 방향제, 화장품, 세탁세제, 손소독제 등 OEM 생산품목", "region": "충북 청주시 청원구 내수읍", "scale": "중견", "source": "https://cctimes.kr/news/articleView.html?idxno=846011", "tier": 1}, {"brand": "슈가버블", "caveat": null, "contact": "080-251-4611 / cs@sugarbubble.com", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"주방세제, 세탁세제, 섬유유연제 등 친환경 세제를 개발·제조·판매\" (매출 약296~380억원, 직원 63~81명, 2022 ESG대상)", "homepage": "https://sugarbubble.co.kr/", "name": "(주)슈가에코 (슈가버블)", "products": "주방세제(구연산레몬 외), 세탁세제(원샷 더블액션/프레시버블/캡슐), 섬유유연제, 식기세척기세제", "region": "경북 포항시 북구 청하면", "scale": "중견", "source": "https://www.mt.co.kr/industry/2022/12/29/2022122915183260744", "tier": 1}, {"brand": "ilovesafe", "caveat": "자사 사이트 인증서 오류로 직접 열람 불가, 연락처 최신성 재확인 권장", "contact": "031-499-7536 (2020년 이전 전 주소와 함께 게재, 최신 여부 불확실)", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"기존 시화공단에서 화성시 전곡산업단지 신축 공장 설립으로 확장 이전\" / \"생산능력 3배 이상\" (2005년 설립, ISO 9001)", "homepage": "ilovesafe.com(직접 접속 불가)", "name": "(주)씨엔이 (C&E)", "products": "유아세제, 주방세제, 세탁세제, 섬유유연제, 핸드워시, 표백제", "region": "경기 화성시 전곡산업단지", "scale": "중소", "source": "https://www.mt.co.kr/amp/future/2020/06/22/2020062211381174604", "tier": 1}, {"brand": "청춘생활", "caveat": null, "contact": "1544-7248 / family@cheong-se.com", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"전북 익산시로 공장을 확장, 이전\" / \"일 15t, 월 400t 생산량\" — 세탁세제·주방세제 생산", "homepage": "https://cheongse-life.com/", "name": "(주)청세 (청춘생활)", "products": "워터클리닝 세제·유연제(2L), 얼룩제거제, 깨끗하곰팡(곰팡이클리너)", "region": "전북 익산시", "scale": "중소", "source": "http://www.kdpress.co.kr/news/articleView.html?idxno=118446", "tier": 1}, {"brand": "포크스, 1%솔루션, 자나깨나, 사니젠, 모스넷 등", "caveat": null, "contact": "031-352-5388 / info@worldchem.co.kr", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "OEM/ODM 개발 프로세스 페이지 명시, 사업자등록번호 124-87-03468, 공장 3,000~5,000㎡·일일 최대 3만개 생산", "homepage": "https://www.worldchem.co.kr", "name": "주식회사 월드켐", "products": "의약외품·화장품·세제·세정제·산업용세제 카테고리 (다수 자체 브랜드 보유)", "region": "경기 화성시 마도면(청원산단)", "scale": "중소", "source": "https://www.worldchem.co.kr/oemodm", "tier": 1}, {"brand": "동구밭 / 동구밭팩토리(OEM 사업부)", "caveat": "자사 소비자몰에서는 세탁세제 완제품이 확인되지 않음, 기사상 생산 언급만 있어 B2B/OEM 위주로 추정", "contact": "070-4282-9626 / cs@donggubat.com (B2B·OEM: 070-8899-9626)", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"동구밭은... 입욕제, 세탁세제, 화장품 등을 생산 및 판매\" (직원 87명, ISO 인증, 매출 60억원대)", "homepage": "https://donggubatfactory.com/", "name": "(주)동구밭", "products": "샴푸바, 설거지바, 핸드크림, 앰플세안바 등 (자사몰은 고체 화장품·생활용품 위주 — 세탁세제는 OEM 생산 라인으로 추정)", "region": "경기 하남시 미사강변서로(1·2·3공장)", "scale": "중소", "source": "https://www.businesspost.co.kr/BP?command=article_view&num=282312", "tier": 1}, {"brand": "메디크린, 미라클버블, 라루샤푸", "caveat": null, "contact": "031-944-0266 / chaeyro805@naver.com", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"2012년 설립... 종합세제 제조 전문기업\" — 친환경 다용도세제·주방세제·세탁세제, 미국 FDA 인증 보유", "homepage": "https://www.miraclekorea.net", "name": "(주)미라클코리아", "products": "메디크린, 라루샤푸, 미라클버블 주방세제·다용도세제·세탁조크리너", "region": "경기 파주시 광탄면 / 포천시 군내면(2공장)", "scale": "중소", "source": "https://www.miraclekorea.net/Kor/Company/About.aspx", "tier": 1}, {"brand": "HOME'S QUEEN, UAH", "caveat": null, "contact": "031-315-7200 / sales@e-yangyang.co.kr", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"1974년 제1공장 설립... 액체 세탁세제, 섬유유연제, 주방세제 생산\" — LG생활건강·보령메디앙스 OEM 협력사", "homepage": "https://e-yangyang.co.kr", "name": "양양산업(주)", "products": "액체세탁세제, 섬유유연제, 주방세제, 다목적세정제 (개별 제품명은 이미지 기반 홈페이지라 텍스트 미확인)", "region": "경기 시흥시 미산동", "scale": "중소", "source": "https://selfcos.com/index/company_view/462", "tier": 1}, {"brand": "CLEANHILL, NASORB, Stükerad", "caveat": "사용자 제공 소재지(시흥시 공단1대로)와 홈페이지 오시는길 주소(화성시 마도면)가 달라 확인 필요", "contact": "031-362-6920 / sale@cleanhill.co.kr", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "유산균기업 '베름'과 \"마이크로바이옴 생활용품 개발\" MOU(2022.7) — 세탁세제·주방세제·섬유유연제 생산", "homepage": "http://www.cleanhill.co.kr", "name": "(주)클린힐", "products": "포스트바이오틱스 세탁세제/섬유유연제/타블렛 세탁세제/타블렛 식기세척기세제/텀블러세정제", "region": "경기 시흥시 공단1대로(시화공장) ※주소 불일치 주의", "scale": "중소", "source": "https://mdtoday.co.kr/news/view/1065577804948246", "tier": 1}, {"brand": "OEM 전문 / 자체 소비자 브랜드 없음", "caveat": null, "contact": "031-949-9680", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "공장 실사진(항공샷)·생산라인(대형 믹서·탱크) 직접 확인 / 연간 1200만개 이상 생산(대지 3200평)", "homepage": "http://www.odortech.co.kr", "name": "(주)한국오도텍", "products": "세탁세제, 섬유유연제, 주방세제, 다목적세정제, 방향제·탈취제 등", "region": "경기 파주시 파주읍", "scale": "중소", "source": "http://odortech.co.kr/gallery ; http://www.pajutimes.com/news/articleView.html?idxno=26774", "tier": 1}, {"brand": "The Consensus, enbliss, ZEROchem, Kongkam", "caveat": "유사 상호(서울 소재 물류회사)가 별도로 존재 — hb-group.co.kr이 보은공장 주소와 일치함을 확인함", "contact": "1688-4982 / master@consensus.co.kr", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "공장등록 데이터 확인 + 자사 홈페이지(hb-group.co.kr)에서 보은공장 주소 교차 확인", "homepage": "hb-group.co.kr", "name": "(주)에이치비글로벌", "products": "공감 그린 세탁세제 2.5L, 인블리스 베이직 세탁세제, 제로켐 강알칼리수 액체세탁세제 20L 등", "region": "충북 보은군 장안면(+음성군 2개 공장)", "scale": "중소", "source": "ifactoryhub.com ; hb-group.co.kr", "tier": 1}, {"brand": "웰그린 (웰그린락스·보드랑·뉴그린·쿨타임 등 서브라인)", "caveat": null, "contact": "055-375-0342 / welgreen@welgreen.net", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"2003년 8월 경남 양산 공장 착공(대지 2000평)... 2004년 5월 준공\" — 등록업종 \"합성세제, 세정제\"", "homepage": "https://welgreen.net/", "name": "(주)웰그린세제", "products": "웰그린 베이비 세탁세제 3kg, 웰그린 액체세제 2.1L×8 등", "region": "경남 양산시 상북면", "scale": "중소", "source": "http://welcome2021.firstmall.kr/service/company", "tier": 1}, {"brand": "ZIRO(지로) + 기존 DS 브랜드", "caveat": "자사 홈페이지 브랜드 페이지에는 아직 ZIRO가 게재되지 않음(업데이트 지연 추정) — G마켓·뉴스로 교차 확인", "contact": "070-4907-1891 / daesung-indus@naver.com", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"ZIRO는 대성인더스가 기존 '홈블리 프리미엄','DS' 브랜드 노하우로 선보인 프리미엄 세탁세제\" (2015년 설립)", "homepage": "https://www.dsindus.com/", "name": "대성인더스", "products": "지로 퍼펙트 워시 세탁세제 2.5L·14L, DS 액체 세탁세제 2.5L", "region": "전남 함평군 학교면", "scale": "중소", "source": "http://www.dtoday.co.kr/news/articleView.html?idxno=723782", "tier": 1}, {"brand": "건조해(Hae), 룩브라이트(LookBright)", "caveat": null, "contact": "041-532-0853 / roadf3312@naver.com", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "특허청 발급 특허증 6건(세정제·욕실세제·건조기 등) 및 ISO 9001/14001 인증서 스캔본 직접 확인", "homepage": "https://roadf.net", "name": "(주)로드에프", "products": "건조기시트(건조해·룩브라이트), 캡슐세제(빨래해·룩브라이트)", "region": "충남 아산시 배방읍", "scale": "소규모", "source": "https://roadf.net/sub/sub03_03.php", "tier": 1}, {"brand": "시월다래(Siwol Darae)", "caveat": "자사 홈페이지 접속 실패로 세탁세제 개별 제품명·연락처 확인 못함", "contact": "확인 안됨", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"2001년 이천시 모가면 진가리에 설립\" — 장애인·고령자 고용 사회적기업, 친환경 샴푸·세탁세제·손소독제 생산(직원 약23명)", "homepage": "확인 안됨(daraeworld.com 접속 거부)", "name": "(주)다래월드", "products": "다래샴푸, 과탄산소다수, 구연산수 (세탁세제 구체 제품명은 미확인, 기사에 생산 언급만 존재)", "region": "경기 이천시 모가면", "scale": "소규모", "source": "https://www.joongboo.com/news/articleView.html?idxno=363687430", "tier": 1}, {"brand": "자체 브랜드 다수 보유(OEM 겸업 여부 미확정)", "caveat": "타사명 제품도 함께 유통망에 잡혀 OEM 겸업 가능성 있음(미확정)", "contact": "032-342-3336", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "공식 업종 \"치약, 비누 및 기타 세제 제조업\", 생산품목 \"세제류, 세정제\" (인천시 공식 기업정보 플랫폼 등록, 직원 12명)", "homepage": "확인 안됨", "name": "(주)서연크린테크", "products": "서연 향락스, 서연퐁 주방세제, 파워맥스 세탁세제 3kg/800g·겔 14L, 향기샵 섬유유연제 20L 등", "region": "인천 서구/남동구 + 경기 김포시 양촌읍(공장)", "scale": "소규모", "source": "https://bizok.incheon.go.kr/platform/ofc/ofcDetail.do?ofc_key=13721", "tier": 2}, {"brand": "G2", "caveat": "전화 지역번호(031)가 충북 지역번호(043)와 달라 재검증 필요, 부천 소재 동명 다른 회사와 혼동 주의", "contact": "031-534-7056 (지역번호 불일치 — 원문 그대로 기재)", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "공장등록 데이터: 업종 \"치약, 비누 및 기타 세제 제조업\", 생산품 \"세탁세제, 주방세제, 섬유유연제 등\"", "homepage": "확인 안됨", "name": "(주)버블코리아", "products": "G2 프리미엄 고농축 액체세제 2.5L×4(드럼용/겸용), G2 제로퐁 주방세제", "region": "충북 제천시 왕암동", "scale": "소규모", "source": "ifactoryhub.com 전국 세제공장 리스트", "tier": 2}, {"brand": "확인 안됨", "caveat": "나이스비즈인포 등록주소는 인천 부평구로 나와있어 본사·공장 소재지 불일치 가능성 있음", "contact": "010-3188-4481 (공주시청 기업홍보관)", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "공장등록 데이터: 업종 \"치약, 비누 및 기타 세제 제조업\", 생산품 \"섬유유연제, 주방/세탁세제, 변기/씽크세정제, 락스\"", "homepage": "확인 안됨", "name": "(주)닥터스타크린", "products": "변기세정제, 섬유유연제, 세탁세제 (카테고리 수준, 구체 제품명 미확인)", "region": "충남 공주시 검상동 ※등록주소 불일치", "scale": "소규모", "source": "ifactoryhub.com 전국 세제공장 리스트", "tier": 2}, {"brand": "확인 안됨", "caveat": "온라인 공개 정보가 거의 없는 초영세 업체로 판단됨", "contact": "확인 안됨", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "공장등록 데이터: 업종 \"치약, 비누 및 기타 세제 제조업 외 1종\", 생산품 \"섬유유연제, 주방세제, 세탁세제, 락스\"", "homepage": "확인 안됨(홈페이지 없음)", "name": "주식회사 자연나라", "products": "확인 안됨", "region": "충북 음성군 생극면", "scale": "소규모", "source": "ifactoryhub.com 전국 세제공장 리스트", "tier": 2}, {"brand": "자연과함께(추정)", "caveat": "자사 홈페이지 인증서 오류로 제품 원문 확인 못함", "contact": "확인 안됨", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "등록업종 \"치약, 비누 및 기타 세제 제조업\", \"사업내용: 세제류 제조 및 판매\" (2006년 설립, 직원 9명, 매출 약17.5억원)", "homepage": "자연과함께.kr(인증서 만료로 접속 불가)", "name": "(주)자연과함께", "products": "확인 안됨(가정용세제·캡슐세제·시트유연제 카테고리 정황만 확인)", "region": "경북 칠곡군 약목면", "scale": "소규모", "source": "사람인 기업정보", "tier": 2}, {"brand": "확인 안됨", "caveat": "사람인·나이스디앤비·bizno 등 주요 기업정보 채널에서 추가 정보가 전혀 검색되지 않는 초영세 업체", "contact": "확인 안됨", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "사업자 등록업종 \"치약, 비누 및 기타 세제 제조업\" (공장등록 데이터 + bizno.net 업종 교차확인)", "homepage": "확인 안됨", "name": "(주)동양아너스", "products": "확인 안됨", "region": "경북 경산시 진량읍", "scale": "소규모", "source": "ifactoryhub.com 전국 세제공장 리스트", "tier": 2}, {"brand": "확인 안됨", "caveat": "검색결과에 습기제거제 생산 언급도 혼재돼 세탁세제가 주력인지 불명확", "contact": "063-452-1239", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "공장등록 데이터: 업종 \"치약, 비누 및 기타 세제 제조업 외 1종\", 생산품 \"세제, 제습제\"", "homepage": "확인 안됨", "name": "그린캠(유)", "products": "세제, 제습제(주력 제품 불명확)", "region": "전북 군산시 서수면", "scale": "소규모", "source": "ifactoryhub.com 전국 세제공장 리스트", "tier": 2}, {"brand": "크리미오(Crimio)", "caveat": null, "contact": "053-383-1811 / crimio@nate.com", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "2014년 ISO 9001·ISO 14001 인증, 식기세척기용 세제 친환경마크 인증, 발명특허(교반장치 10-2198351) 보유", "homepage": "http://crimio.co.kr", "name": "(주)크리미오 (Crimio)", "products": "주방세제, 애벌담금세제, 식기세척기세제·린스, 세탁세제·유연제, 유아세제", "region": "대구 북구 유통단지로", "scale": "영세", "source": "http://crimio.co.kr/home/sub1_2", "tier": 1}, {"brand": "오가닉K(Organic K)", "caveat": null, "contact": "070-4165-0111", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "2014년 설립, 본점 외 제2·3공장 운영 — 특허 제10-1984747호(천연계면활성제 저자극 액체세제) 보유", "homepage": "http://www.organick.co.kr", "name": "(주)오가닉케이 (Organic K)", "products": "세탁세제, 섬유유연제, 섬유탈취제, 방향제", "region": "경북 칠곡군 지천면(본점)+약목면(2·3공장)", "scale": "영세", "source": "http://www.organick.co.kr/bbs/content.php?co_id=factory", "tier": 1}, {"brand": "베베앙(Bebe En, 물티슈 주력) / 워시클리닉(Wash Clinic, 세제)", "caveat": "주력 제품은 물티슈이며 세제는 서브 브랜드로 운영 중", "contact": "054-372-5118", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "공장등록 데이터 \"물티슈, 세탁·주방세제\" 명시 + 자사몰에서 세제 브랜드 '워시클리닉' 직접 확인", "homepage": "https://soonsukorea.co.kr/", "name": "(주)순수코리아", "products": "워시클리닉 딥클린 액체세제 2.5L, 딥클린 캡슐세제, 라벤더브리즈 섬유유연제", "region": "경북 김천시 어모면", "scale": "영세", "source": "ifactoryhub.com ; https://soonsukorea.co.kr/", "tier": 1}, {"brand": "확인 안됨", "caveat": "사람인·나이스디앤비·bizno·잡코리아 등 어디서도 추가 정보가 검색되지 않는 초영세 업체", "contact": "확인 안됨", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "공장등록 데이터: 업종 \"치약, 비누 및 기타 세제 제조업\", 생산품 \"압축 고형세제, 가루세제\"", "homepage": "확인 안됨(홈페이지 없음)", "name": "(주)다온켐텍", "products": "확인 안됨", "region": "충남 아산시 염치읍", "scale": "영세", "source": "ifactoryhub.com 전국 세제공장 리스트", "tier": 2}, {"brand": "웨이블, 액큐(참고용 — 동일 회사 여부 불확실)", "caveat": "공장등록 주소(대구 북구)와 홈페이지 사업장 주소(칠곡군 지천면)가 달라 동일 회사인지 불확실 — 회사명·대표자명 기준으로는 일치 가능성 있으나 확인 필요", "contact": "1533-3366 / newseje@naver.com (주소 불일치 업체 기준이라 참고용)", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "공장등록 데이터: 업종 \"계면활성제 제조업 외 1종\", 생산품 \"세제\"", "homepage": "newseje.cafe24.com(주소 불일치 발견)", "name": "(주)뉴세제코리아", "products": "식기세척기, 다목적세제 등 (세탁세제 특정 제품 근거는 부족)", "region": "대구 북구 노원로 ※주소 불일치 주의", "scale": "영세", "source": "ifactoryhub.com 전국 세제공장 리스트", "tier": 2}, {"brand": "슈퍼맥스, 버블원(추정 — 원문 미열람으로 브랜드/제품 확정 어려움)", "caveat": "자사 사이트 DNS/인증서 오류로 직접 열람 불가, 검색엔진 색인 정보로만 보완", "contact": "확인 안됨", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "공장등록 데이터: 업종 \"치약, 비누 및 기타 세제 제조업 외 1종\", 생산품 \"세제, 세제류\" — 2개 공장 운영", "homepage": "daeju.net(직접 접속 불가)", "name": "(주)대주케미칼", "products": "세제, 세제류 (구체 제품명 확정 어려움)", "region": "경기 김포시 양촌읍(2개 공장)", "scale": "영세", "source": "ifactoryhub.com 전국 세제공장 리스트", "tier": 2}, {"brand": "OEM/ODM 전문(자체 소비자 브랜드는 없고 ODM 위주)", "caveat": null, "contact": "홈페이지 문의", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"대한민국의 펫사료 및 세탁세제 제조 기업\" — 애터미 올인원 캡슐 세탁세제·워시앤위시 캡슐 세탁세제 제조사로 확인 (코스닥 상장, 2024년 매출 약192억원)", "homepage": "http://www.jjbio.co.kr", "name": "(주)전진바이오팜", "products": "애터미 올인원 캡슐 세탁세제, 워시앤위시 캡슐형 세탁세제, 액상·분말 세탁세제", "region": "대구 달서구 성서공단북로", "scale": "중견", "source": "사람인/위키백과 ; jjbio.co.kr", "tier": 1}, {"brand": "사피(SAFI)", "caveat": "직원수가 자료마다 44명/74명으로 상이", "contact": "031-832-0652", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"이달의 으뜸중기제품... 사피 8가지 자연원료로 제조...세탁물속 중금속도 제거\" (1993년 설립, 2015년 자가공장, 직원 약44~74명, 매출 약229억원)", "homepage": "www.chemsfield.com", "name": "(주)켐스필드코리아", "products": "사피 세탁세제(8가지 자연원료), 섬유유연제, 주방세제", "region": "경기 연천군 백학면", "scale": "중소", "source": "https://www.hankyung.com/economy/article/2017091893151", "tier": 1}, {"brand": "은나노스텝, 탑스텝, 피토레시피, 미라블룸, 라라베르", "caveat": null, "contact": "031-544-6781, 080-900-7878 / oem@kmpc.co.kr", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "자사 홈페이지 \"친환경종합세제전문회사\" 명시, 제1·2공장 주소 확인 (2004년 설립, 직원 87명, 특허 87건, 세탁세제 등 165개 제품)", "homepage": "https://www.kmpc.co.kr", "name": "(주)한국미라클피플사 (KMPC)", "products": "세탁세제, 섬유유연제 등 165개 제품", "region": "경기 포천시 군내면 용정경제로1길", "scale": "중소", "source": "https://www.kmpc.co.kr", "tier": 1}, {"brand": "OEM/ODM 전문", "caveat": "정확한 지번주소는 확인 안됨(포천 소재만 확인)", "contact": "홈페이지 문의", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"포천캠퍼스를 구축, 2023년 쿠팡 PB 제조 파트너사가 되었다\" — 액체세제·섬유유연제 자체 생산 명시, ISO 인증", "homepage": "https://bioverse.kr", "name": "(주)바이오버스", "products": "액체 세제, 고농축 세제, 섬유유연제, 탈취제", "region": "경기 포천시(포천캠퍼스)", "scale": "중소", "source": "https://bioverse.kr", "tier": 1}, {"brand": "생활공작소", "caveat": null, "contact": "043-881-8220 / info@taewoncorp.co.kr", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "자사 홈페이지 \"주방세제 세탁세제 핸드워시 전문 제조기업\" 명시, 2개 생산시설 운영", "homepage": "https://taewoncorp.co.kr", "name": "(주)태원", "products": "세탁세제, 주방세제, 핸드워시, 다목적세정제", "region": "충북 음성군 금왕읍(1·2공장)", "scale": "중소", "source": "https://taewoncorp.co.kr", "tier": 1}, {"brand": "무궁화, 브라이트, 로썸, 자연미인, 샤워랑", "caveat": "직원수·매출액 등 상세 규모 정보는 확인 안됨", "contact": "02-970-0739", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"대한민국 최초로 세탁비누를 생산\" (1947년 설립, 업력 78년) — 사업자정보 주요 생산품 \"고형세탁비누, 화장비누, 정제글리세린\" 명시", "homepage": "https://mkh.co.kr", "name": "(주)무궁화 (무궁화유지)", "products": "무궁화 세탁비누, 파워브라이트(액체·캡슐·가루세제), 때비누", "region": "경기 동두천시 갈마지길", "scale": "중견", "source": "bizno.net ; namu.wiki ; mkh.co.kr", "tier": 1}, {"brand": "코코리(COCORI)", "caveat": "생산시설 규모·설비 관련 공개 정보는 제한적", "contact": "070-8990-8296 / online@cocori.kr", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "감귤 부산물을 원료로 \"직접 생산, 제조\" — 관련 특허(10-2026688, 10-2029313) 및 환경표지인증(15327) 보유", "homepage": "https://cocori.kr", "name": "농업회사법인(주)제주클린산업 (코코리)", "products": "코코리 감귤담은 세탁세제, 코코리 감귤꽃향 섬유유연제", "region": "제주 제주시 조천읍 번영로", "scale": "소규모", "source": "mafra.go.kr ; cocori.kr", "tier": 1}, {"brand": "퍼핀(Puffin)", "caveat": null, "contact": "031-791-6611", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "코스트코코리아 \"신희\" 브랜드관에서 직접 판매, 다나와 제품정보에 제조사 \"신희\" 명시 (직원 7명, 매출 약38.5억원)", "homepage": "shinhee.co.kr", "name": "(주)신희", "products": "퍼핀 듀얼캡슐세제, 퍼핀 오렌지 세탁세제", "region": "경기 하남시 하남대로933번길", "scale": "영세", "source": "costco.co.kr/Shinhee ; danawa 제품페이지", "tier": 1}, {"brand": "OEM 전문 + 자체 브랜드 샤이린(Shailin, 리테일 유통용)", "caveat": "사업장 주소가 자료마다 안성시/광주시로 다르게 나와 실제 생산공장 위치는 추가 확인 필요", "contact": "1588-1733 / info@sungjinchem.co.kr", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "자사 홈페이지 제품 카테고리에 \"LAUNDRY\" 명시 + 11번가 상품명에 \"세탁세제(성진켐 스피드파워)\" 명시 — 대상㈜·이랜드리테일·홈플러스 등 납품 이력 (직원 약39~45명, 매출 약216~229억원, 2010년 설립)", "homepage": "https://www.sungjinchem.com", "name": "(주)성진켐", "products": "세탁세제, 섬유유연제, 표백제, 식기세제 (OEM) / 샤이린 스피드파워 세탁세제(자체 유통)", "region": "경기 안성시 공단1로(사업자등록) ※광주시 본사 표기도 존재", "scale": "중소", "source": "https://www.sungjinchem.com ; 11st.co.kr 상품페이지", "tier": 1}, {"brand": "푸른들, 하이롱, 스위피 등", "caveat": "다이소 판매 페이지에 제조사가 별도 표기되지 않아 제품명 일치에 근거한 정황 증거임", "contact": "031-356-7477", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "chemknock 자체소개에 \"가루세탁세제, 하이롱 1kg/2L\" 명시, 다이소몰의 \"푸른들 세탁세제 2.5L\" 제품명과 회사명 일치 (직원 16명, 매출 약44.5억원)", "homepage": "확인 안됨", "name": "(주)푸른들", "products": "푸른들 세탁세제 2.5L(다이소 판매), 가루세탁세제 하이롱", "region": "경기 화성시 서신면 전곡산단로", "scale": "소규모", "source": "chemknock.co.kr/chem/prd4091 ; daisomall.co.kr", "tier": 1}, {"brand": "확인 안됨", "caveat": "구체적 세탁세제 브랜드명·제품명 미확인", "contact": "031-769-1107", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"세제·화장품·광택제 제조업... 분말세제, 액체세제, 소취제, 섬유유연제 등을 생산\" — 공장등록 데이터상 \"세척제제조업\" (직원 4명, 2005년 설립)", "homepage": "확인 안됨", "name": "(주)금강하이켐", "products": "분말세탁세제, 액체세탁세제, 섬유유연제, 소취제", "region": "경기 광주시 도척면 방등길", "scale": "영세", "source": "opengo.kr ; wanted.co.kr 기업정보", "tier": 2}, {"brand": "자체 브랜드(구체명 미확인)", "caveat": "사업자명이 \"세신코스메틱(세신케미칼)\"로도 조회되어 상호 표기가 자료마다 다름", "contact": "053-581-6639", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "자체소개 \"샴푸, 린스, 바디워시, 주방세제, 세탁세제, 섬유유연제, 핸드워시... 자체 브랜드로 직접 판매\"", "homepage": "확인 안됨", "name": "세신케미칼 (세신코스메틱)", "products": "세탁세제, 섬유유연제, 주방세제, 샴푸·바디워시 등", "region": "대구 달성군 하빈면", "scale": "영세", "source": "chemknock.co.kr/chem/세신케미칼", "tier": 2}, {"brand": "구체 브랜드명 미확인", "caveat": "주력 사업은 계면활성제·화장품원료이며 세탁세제는 부차적 제품군으로 보임", "contact": "031-491-1351", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "자체소개 \"국내 최초 계면활성제 제조기업... 의류용 세탁세제류 제조\" (1973년 설립, 직원 45명, 외국인투자기업, CGMP/ISO22716 인증)", "homepage": "www.taidong.co.kr", "name": "(주)태동씨엔에스", "products": "의류용 세탁세제류(제품군), 계면활성제, 화장품 원료", "region": "경기 안산시 단원구 목내로", "scale": "중소", "source": "chemknock.co.kr/chem/taidong ; saramin 기업정보", "tier": 2}, {"brand": "ROYCEN(로이센)", "caveat": "산업/업소용(세탁공장·유니폼 등)으로 추정되어 일반 소비자용과는 결이 다를 수 있음, 동명 타사 다수 존재로 혼동 주의", "contact": "02-2022-3500", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "자사 홈페이지 제품 카테고리에 \"산업용 세탁세제\" 명시", "homepage": "humt.co.kr", "name": "(주)휴먼텍", "products": "산업용 세탁세제(ROYCEN)", "region": "서울 구로구 디지털로33길", "scale": "소규모", "source": "humt.co.kr ; chemknock.co.kr/chem/humt", "tier": 2}, {"brand": "순한고집 강청비누", "caveat": "홈페이지가 자체서명 인증서(SSL) 오류로 일부 페이지 직접 열람 불가하여 사업자등록 정보로 보완 확인함", "contact": "062-675-4706", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "자사 홈페이지에서 \"천연비누&합성세제\" 연구실을 운영하며 세탁용 제품 카테고리를 직접 판매 (2014년 설립, 자본금 1억원)", "homepage": "http://www.kcsoap.com", "name": "유한회사 강청", "products": "세탁용 비누, 주방용 비누, 세안/목욕용 비누", "region": "광주 북구 양일로(양산동)", "scale": "영세", "source": "kcsoap.com ; bizno 계열 검색결과", "tier": 2}, {"brand": "블루워시(BlueWash)", "caveat": "자사 홈페이지에는 공장·제조인증 상세정보가 명시되어 있지 않아 사업자정보(제조업 등록)로 보완 확인함", "contact": "031-592-5963 / bluewash@blue-wash.co.kr", "contactNote": "", "contactPerson": "", "contactStatus": "미시도", "evidence": "\"국내 최초 캡슐세제, 건조기시트 EWG올그린 등급에 비건 인증 생활 용품 전문 제조사\" (2019년 설립) — 자사몰에서 캡슐세제·타블렛세제 직접 판매", "homepage": "https://blue-wash.co.kr", "name": "(주)블루워시 (BlueWash)", "products": "블루워시 비건 캡슐 세탁세제, 고체발포형 세탁세제(타블렛), 건조기시트", "region": "경기 남양주시 진접읍 양진로", "scale": "소규모", "source": "사람인 기업정보 ; blue-wash.co.kr/shopinfo/company.html", "tier": 1}, {"brand": "확인 안됨", "caveat": "자체 공식 홈페이지 없이 네이버 스마트스토어로 유통 — 품목군이 \"세척제\"로만 명시되어 세탁세제(의류용) 특정 제품 여부는 추가 확인 필요", "contact": "02-2689-9541", "contactNote": "패딩 볼룸 복원 전용 세제/ 악취 재발 방지 섬유유연제 생산 진행\n", "contactPerson": "이병준 부장님/ 010-3702-9541", "contactStatus": "완료", "evidence": "업종 \"치약, 비누 및 기타 세제 제조업\", \"세척제, 장류, 화장품, 치약 등을 제조\" (1999년 설립, 직원 11~12명, 업력 27년)", "homepage": "확인 안됨(네이버 스마트스토어로 유통)", "name": "선진바이오(주)", "products": "세척제류(세탁세제 포함 추정), 장류, 화장품, 치약", "region": "경기 광명시 광명로676번길", "scale": "소규모", "source": "wanted.co.kr ; bizno.net ; nicebizinfo.com", "tier": 2}];
   const CN = [{"followNote": "wechat: TDJ001128", "followStatus": "예정", "name": "广东优凯科技有限公司", "note": "국가전정특신기업, 40656㎡", "products": "洗衣凝珠/洗衣液/留香珠", "region": "佛山", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-3062084881f3761"}, {"followNote": "", "followStatus": "미시도", "name": "安徽共盈日化有限公司", "note": "活力28 대행생산", "products": "洗衣液/洗洁精/多用途清洁剂", "region": "合肥", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-2928219790c01ca"}, {"followNote": "", "followStatus": "미시도", "name": "惠州市康洁洗涤用品有限公司", "note": "17년, 98974㎡ 초대형공장", "products": "洗衣粉/洗衣液/洗洁精", "region": "惠州", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=kangjiegd"}, {"followNote": "", "followStatus": "미시도", "name": "广东洁狮医药科技有限公司", "note": "富妮来(LUNILAI) 대행생산, FDA인증", "products": "洗衣凝珠/洗衣液/留香珠", "region": "佛山", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-2211930282552979d4"}, {"followNote": "", "followStatus": "미시도", "name": "广州佳洁生物科技有限公司", "note": "3년, 9319㎡", "products": "日化用品加工/衣物清洁护理", "region": "广州/武汉", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-2216507873820ecc0c"}, {"followNote": "", "followStatus": "미시도", "name": "优姿科技有限公司", "note": "12년, 22272㎡", "products": "洗衣液/洗洁精/马桶洁厕剂", "region": "金华", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-2413964811"}, {"followNote": "", "followStatus": "미시도", "name": "湖北创净清洁用品有限公司", "note": "5년, 7836㎡", "products": "多用途清洁剂/地板清洁剂", "region": "荆州", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-22132708704616e9d1"}, {"followNote": "", "followStatus": "미시도", "name": "浙江吉孚日化有限公司", "note": "奥妙(Omo) 대행생산, 54257㎡ 초대형", "products": "洗衣液/洗洁精/沐浴液", "region": "湖州", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-221471078659237977"}, {"followNote": "", "followStatus": "미시도", "name": "河北朴源日用化学品有限公司", "note": "7년, 4824㎡", "products": "洗衣液/洗洁精/洗衣皂", "region": "保定", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-22087575149470e3ca"}, {"followNote": "", "followStatus": "미시도", "name": "广州洁宜日化用品有限公司", "note": "太平鸟 대행생산, 특허보유", "products": "洗衣液/马桶洁厕剂/干洗剂", "region": "广州", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-22080918389751644c"}, {"followNote": "", "followStatus": "미시도", "name": "临沂高新区爱尚美日化用品厂", "note": "洗洁精实力榜 17위", "products": "洗衣液/洗洁精/马桶洁厕剂", "region": "临沂", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-2211233886851596fb"}, {"followNote": "", "followStatus": "미시도", "name": "河北朴源商贸有限公司", "note": "洗衣液服务榜 19위", "products": "洗衣液/油污清洁剂/马桶洁厕剂", "region": "保定", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-420127035459fda"}, {"followNote": "", "followStatus": "미시도", "name": "广州慕森生物科技有限公司", "note": "7년", "products": "洗发水/内衣洗衣液/洗发护发套装", "region": "广州", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-2208553661886255d9"}, {"followNote": "", "followStatus": "미시도", "name": "泰安北方洗涤用品有限公司", "note": "17년, 25000㎡ 초대형", "products": "洗衣粉/洗衣液/油污清洁剂", "region": "泰安", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=norfound"}, {"followNote": "", "followStatus": "미시도", "name": "郑州市佳可美日用品有限公司", "note": "2년, 4200㎡", "products": "多用途清洁剂/洗衣液/清洗养护剂", "region": "郑州", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-221943604883663092"}, {"followNote": "", "followStatus": "미시도", "name": "汕头市花雨秀化妆品有限公司", "note": "ISO9001 인증", "products": "牙膏/沐浴液/洗衣液", "region": "汕头", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-22133621899601e9ea"}, {"followNote": "", "followStatus": "미시도", "name": "广东洁大夫日用品有限公司", "note": "爱兰歌娜(Algn) 대행생산", "products": "多用途清洁剂/干洗剂/清洗养护剂", "region": "佛山", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-2210943809536120a4"}, {"followNote": "", "followStatus": "미시도", "name": "蓝月亮(中国)有限公司", "note": "★중국 유명 브랜드 蓝月亮 계열, 49400㎡", "products": "洗衣液/洗手液/马桶洁厕剂", "region": "广州", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-291390870731974"}, {"followNote": "", "followStatus": "미시도", "name": "广州菁纯日化有限公司", "note": "内衣洗衣液热度榜 2위", "products": "洗衣凝珠/留香珠/内衣洗衣液", "region": "广州", "sendStatus": "문의완료", "url": "https://sale.1688.com/factory/card.html?memberId=b2b-2214051082591779de"}, {"followNote": "", "followStatus": "미시도", "name": "义乌市雷立日用品有限公司", "note": "링크 로딩 오류로 문의 실패", "products": "洗衣凝珠/留香珠/马桶洁厕剂", "region": "金华", "sendStatus": "실패", "url": ""}];
+  const DRY = [];
   const scaleOrder = ["대기업/중견","중소","소규모","영세"];
   let activeScale = "전체";
 
@@ -235,6 +301,15 @@
       document.querySelectorAll('[data-panel]').forEach(p=>{ p.hidden = p.getAttribute('data-panel') !== tab; });
       document.body.classList.toggle('tab-kr', tab==='kr');
       document.body.classList.toggle('tab-cn', tab==='cn');
+    });
+  });
+
+  // ---- 국내 제조사 책꽂이: 세탁세제 / 건조기시트 전환 ----
+  document.querySelectorAll('.spine-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.spine-btn').forEach(b=>b.classList.toggle('active', b===btn));
+      const sub = btn.dataset.krsub;
+      document.querySelectorAll('[data-krsub-panel]').forEach(p=>{ p.hidden = p.getAttribute('data-krsub-panel') !== sub; });
     });
   });
 
@@ -313,6 +388,72 @@
   }
   document.getElementById('kr-search').addEventListener('input', renderKrGrid);
   renderKrStats(); renderKrChips(); renderKrGrid(); renderKrContactedList();
+
+  // ---- 건조기시트 (책꽂이 두번째 칸, KR과 동일한 스키마) ----
+  let dryActiveScale = "전체";
+  function renderDryStats(){
+    const counts = {};
+    DRY.forEach(c=>{ const g = groupOf(c.scale); counts[g]=(counts[g]||0)+1; });
+    document.getElementById('dry-stats').innerHTML =
+      `<div class="stat"><b>${DRY.length}</b> 전체</div>` +
+      scaleOrder.map(g=>`<div class="stat"><b>${counts[g]||0}</b> ${esc(g)}</div>`).join('');
+  }
+  function renderDryChips(){
+    const el = document.getElementById('dry-chips');
+    const scales = ["전체", ...scaleOrder];
+    el.innerHTML = scales.map(s=>`<button class="scale-chip ${s===dryActiveScale?'active':''}" data-scale="${esc(s)}">${esc(s)}</button>`).join('');
+    el.querySelectorAll('.scale-chip').forEach(btn=>{
+      btn.addEventListener('click', ()=>{ dryActiveScale = btn.dataset.scale; renderDryChips(); renderDryGrid(); });
+    });
+  }
+  function renderDryGrid(){
+    const q = (document.getElementById('dry-search').value||'').trim().toLowerCase();
+    const filtered = DRY.filter(c=>{
+      if(dryActiveScale!=="전체" && groupOf(c.scale)!==dryActiveScale) return false;
+      if(!q) return true;
+      return [c.name,c.region,c.brand,c.products].some(f=>String(f||'').toLowerCase().includes(q));
+    });
+    const grid = document.getElementById('dry-grid');
+    if(DRY.length===0){ grid.innerHTML = '<div class="queue-empty">아직 조사된 건조기시트 제조사가 없습니다. 예약된 리서치 완료 후 채워질 예정입니다.</div>'; return; }
+    if(filtered.length===0){ grid.innerHTML = '<div class="queue-empty">조건에 맞는 회사가 없습니다.</div>'; return; }
+    grid.innerHTML = filtered.map(c=>`
+      <div class="card">
+        <div class="card-head ${scaleClass(c.scale)}">
+          <span class="cname">${esc(c.name)}</span>
+          <span class="ctag">${esc(c.scale)} · T${c.tier}</span>
+        </div>
+        <div class="card-body">
+          <span class="contact-badge ${esc(c.contactStatus||'미시도')}">컨택 ${esc(c.contactStatus||'미시도')}</span>
+          <div class="f"><span class="l">소재지</span><span class="v">${esc(c.region)}</span></div>
+          <div class="f"><span class="l">연락처</span><span class="v">${esc(c.contact)}</span></div>
+          <div class="f"><span class="l">브랜드</span><span class="v">${esc(c.brand)}</span></div>
+          <div class="f"><span class="l">제품</span><span class="v">${esc(c.products)}</span></div>
+          <div class="f"><span class="l">근거</span><span class="v">${esc(c.evidence)}</span></div>
+          <div class="f"><span class="l">출처</span><span class="v">${esc(c.source)}</span></div>
+          <div class="f"><span class="l">홈페이지</span><span class="v">${linkify(c.homepage)}</span></div>
+          ${c.caveat ? `<div class="caveat">⚠ ${esc(c.caveat)}</div>` : ''}
+          ${c.contactNote ? `<div class="contact-note-view">💬 ${esc(c.contactNote)}</div>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+  function renderDryContactedList(){
+    const done = DRY.filter(c=>c.contactStatus==='완료');
+    document.getElementById('dry-contactedCount').textContent = '(' + done.length + ')';
+    const el = document.getElementById('dry-contactedList');
+    el.innerHTML = done.length===0
+      ? '<div class="queue-empty">아직 컨택 완료로 표시된 업체가 없습니다.</div>'
+      : done.map(c=>`
+        <div class="contacted-row">
+          <div class="cn">${esc(c.name)}</div>
+          <div class="field"><span class="l">담당자</span><span>${c.contactPerson ? esc(c.contactPerson) : '<span class="muted">미입력</span>'}</span></div>
+          <div class="field"><span class="l">연락처</span><span>${esc(c.contact)}</span></div>
+          <div class="field"><span class="l">메모</span><span>${c.contactNote ? esc(c.contactNote) : '<span class="muted">메모 없음</span>'}</span></div>
+        </div>
+      `).join('');
+  }
+  document.getElementById('dry-search').addEventListener('input', renderDryGrid);
+  renderDryStats(); renderDryChips(); renderDryGrid(); renderDryContactedList();
 
   // ---- CN ----
   function renderCnStats(){
